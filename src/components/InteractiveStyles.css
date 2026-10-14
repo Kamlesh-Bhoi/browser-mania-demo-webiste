@@ -1,0 +1,619 @@
+/* ==========================================================================
+   INTERACTIVE CYBER LAYER & BACKGROUND VIDEO DYNAMIC STYLES
+   ========================================================================== */
+
+/* 1. BACKGROUND VIDEO CONTAINER & LAYERS */
+.cyber-video-bg-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  transition: opacity 0.5s ease;
+}
+
+.cyber-video-bg-container.disabled {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.cyber-video-wrapper {
+  position: absolute;
+  inset: -30px;
+  width: calc(100% + 60px);
+  height: calc(100% + 60px);
+  will-change: transform, opacity;
+  transition: opacity 0.4s ease;
+}
+
+.cyber-bg-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.2) brightness(0.7) saturate(1.4) hue-rotate(-10deg);
+}
+
+/* Cyber color grade over video */
+.cyber-video-color-grade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg, 
+    rgba(4, 7, 16, 0.89) 0%, 
+    rgba(0, 240, 255, 0.05) 45%, 
+    rgba(255, 0, 127, 0.05) 75%, 
+    rgba(4, 7, 16, 0.93) 100%
+  );
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Subtle moving tech grid / scanlines on video */
+.cyber-video-scanline-mesh {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(0, 240, 255, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.5;
+  pointer-events: none;
+  animation: gridDrift 40s linear infinite;
+}
+
+@keyframes gridDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: 480px 480px; }
+}
+
+/* Vignette border to maintain maximum content focus and legibility */
+.cyber-video-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(4, 7, 16, 0.15) 0%, transparent 42%, rgba(3, 6, 14, 0.95) 88%);
+  pointer-events: none;
+}
+
+/* Floating Quick Video Control Badge (Top-Right / Sticky) */
+.cyber-video-quick-badge {
+  position: fixed;
+  top: 76px;
+  right: 20px;
+  z-index: 1002;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cyber-video-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(7, 14, 28, 0.85);
+  border: 1px solid var(--border-cyan);
+  border-radius: 20px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(0, 240, 255, 0.1);
+}
+
+.cyber-video-pill-btn:hover {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 15px var(--neon-cyan-glow);
+  transform: translateY(-1px);
+}
+
+.live-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #64748b;
+  display: inline-block;
+}
+
+.live-pulse-dot.pulsing {
+  background: var(--neon-cyan);
+  box-shadow: 0 0 8px var(--neon-cyan);
+  animation: pulseNeonDot 1.4s infinite ease-in-out;
+}
+
+@keyframes pulseNeonDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.cyber-video-ctrl-btn {
+  background: rgba(7, 14, 28, 0.85);
+  border: 1px solid var(--border-cyan);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+
+.cyber-video-ctrl-btn:hover {
+  color: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 12px var(--neon-cyan-glow);
+}
+
+.cyber-video-slider-popup {
+  position: absolute;
+  top: 38px;
+  right: 0;
+  width: 200px;
+  background: rgba(10, 18, 36, 0.95);
+  border: 1px solid var(--border-cyan);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 240, 255, 0.2);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeInDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--neon-cyan);
+  font-weight: 600;
+}
+
+.cyber-range-slider {
+  width: 100%;
+  accent-color: var(--neon-cyan);
+  cursor: pointer;
+  height: 4px;
+}
+
+.slider-presets {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+.slider-presets button {
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  color: var(--text-secondary);
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex: 1;
+}
+
+.slider-presets button:hover {
+  background: var(--neon-cyan);
+  color: #000;
+}
+
+/* 2. NEURAL PARTICLE PLEXUS CANVAS */
+.cyber-plexus-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 3. DYNAMIC CUSTOM CYBERPUNK CURSOR */
+.cyber-cursor-dot, 
+.cyber-cursor-ring {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cyber-cursor-dot {
+    display: block;
+    position: fixed;
+    top: -4px;
+    left: -4px;
+    width: 8px;
+    height: 8px;
+    background: var(--neon-cyan);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999999;
+    box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+    will-change: transform;
+  }
+
+  .cyber-cursor-dot.hover {
+    background: var(--neon-pink);
+    box-shadow: 0 0 12px var(--neon-pink), 0 0 25px var(--neon-pink);
+    width: 10px;
+    height: 10px;
+    top: -5px;
+    left: -5px;
+  }
+
+  .cyber-cursor-dot.pressed {
+    transform: scale(0.6);
+    background: var(--neon-green);
+  }
+
+  .cyber-cursor-ring {
+    display: block;
+    position: fixed;
+    top: -18px;
+    left: -18px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999998;
+    transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                height 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.25s,
+                top 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                left 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.25s;
+    will-change: transform;
+  }
+
+  .cyber-cursor-ring.hover {
+    width: 52px;
+    height: 52px;
+    top: -26px;
+    left: -26px;
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 16px rgba(255, 0, 127, 0.4);
+    animation: reticleSpin 8s linear infinite;
+  }
+
+  .cyber-cursor-ring.pressed {
+    transform: scale(0.85);
+    border-color: var(--neon-green);
+  }
+
+  /* Reticle Bracket Accents */
+  .crosshair-bracket {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-color: var(--neon-cyan);
+    opacity: 0.8;
+    transition: border-color 0.2s;
+  }
+
+  .cyber-cursor-ring.hover .crosshair-bracket {
+    border-color: var(--neon-pink);
+  }
+
+  .crosshair-bracket.top-left {
+    top: 2px;
+    left: 2px;
+    border-top: 1.5px solid;
+    border-left: 1.5px solid;
+  }
+
+  .crosshair-bracket.top-right {
+    top: 2px;
+    right: 2px;
+    border-top: 1.5px solid;
+    border-right: 1.5px solid;
+  }
+
+  .crosshair-bracket.bottom-left {
+    bottom: 2px;
+    left: 2px;
+    border-bottom: 1.5px solid;
+    border-left: 1.5px solid;
+  }
+
+  .crosshair-bracket.bottom-right {
+    bottom: 2px;
+    right: 2px;
+    border-bottom: 1.5px solid;
+    border-right: 1.5px solid;
+  }
+}
+
+@keyframes reticleSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 4. DYNAMIC SHOCKWAVE BURSTS ON CLICK */
+.cyber-shockwave-ring {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999990;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--neon-cyan);
+  box-shadow: 0 0 15px var(--neon-cyan), inset 0 0 10px var(--neon-pink);
+  animation: shockwaveExplode 0.65s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes shockwaveExplode {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+    border-width: 3px;
+  }
+  100% {
+    width: 130px;
+    height: 130px;
+    opacity: 0;
+    border-width: 1px;
+    border-color: var(--neon-pink);
+  }
+}
+
+/* 5. INTERACTIVE 3D CARD PARALLAX & SPECULAR SHINE */
+.dynamic-3d-tilt {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dynamic-3d-tilt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(0, 240, 255, 0.16) 0%,
+    rgba(255, 0, 127, 0.06) 40%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: inherit;
+}
+
+.dynamic-3d-tilt:hover::before {
+  opacity: 1;
+}
+
+.dynamic-3d-tilt:hover {
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65), 
+              0 0 25px rgba(0, 240, 255, 0.25);
+  border-color: rgba(0, 240, 255, 0.6) !important;
+}
+
+/* 6. DYNAMIC FLOATING CYBER HUD DOCK */
+.cyber-floating-dock {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050;
+  background: rgba(6, 11, 24, 0.94);
+  border: 1px solid var(--border-cyan);
+  border-radius: 40px;
+  padding: 5px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8), 
+              0 0 20px rgba(0, 240, 255, 0.2), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 95vw;
+}
+
+.cyber-floating-dock.minimized {
+  padding: 6px 12px;
+  border-radius: 20px;
+  left: auto;
+  right: 20px;
+  transform: none;
+}
+
+.dock-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid var(--border-cyan);
+  border-radius: 20px;
+  color: var(--neon-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dock-toggle-btn:hover {
+  background: var(--neon-cyan);
+  color: #000;
+  box-shadow: 0 0 12px var(--neon-cyan);
+}
+
+.dock-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dock-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 25, 48, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.dock-action-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.dock-action-btn.active-cyan {
+  color: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.18);
+  box-shadow: 0 0 10px var(--neon-cyan-glow);
+}
+
+.dock-action-btn.active-pink {
+  color: var(--neon-pink);
+  border-color: var(--neon-pink);
+  background: rgba(255, 0, 127, 0.18);
+  box-shadow: 0 0 10px var(--neon-pink-glow);
+}
+
+.dock-action-btn.active-green {
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+  background: rgba(0, 255, 102, 0.18);
+  box-shadow: 0 0 10px var(--neon-green-glow);
+}
+
+.dock-action-btn.blast-btn {
+  background: linear-gradient(135deg, rgba(255, 0, 127, 0.25), rgba(0, 240, 255, 0.25));
+  border-color: var(--neon-pink);
+  color: #fff;
+  font-weight: 700;
+}
+
+.dock-action-btn.blast-btn:hover {
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+  color: #000;
+  box-shadow: 0 0 16px var(--neon-pink-glow);
+}
+
+.dock-action-btn.top-btn {
+  padding: 6px 8px;
+  border-radius: 50%;
+}
+
+/* 7. DYNAMIC GLOWING ANIMATIONS ON INTERACTIVE ELEMENTS */
+.btn-cyber-primary, .btn-cyber-pink, .btn-cyber-outline {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-cyber-primary::before, .btn-cyber-pink::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.3), 
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: 0.6s;
+  pointer-events: none;
+}
+
+.btn-cyber-primary:hover::before, .btn-cyber-pink:hover::before {
+  left: 200%;
+}
+
+.btn-cyber-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 25px var(--neon-cyan-glow), 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-cyber-pink:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 25px var(--neon-pink-glow), 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .cyber-floating-dock {
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 6px;
+    border-radius: 20px;
+    max-width: calc(100vw - 16px);
+    width: auto;
+    gap: 4px;
+    backdrop-filter: blur(20px);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .dock-actions-row {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: calc(100vw - 90px);
+    gap: 4px;
+    padding: 2px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .dock-actions-row::-webkit-scrollbar {
+    display: none;
+  }
+  .dock-toggle-btn {
+    padding: 4px 6px;
+    font-size: 0.65rem;
+    flex-shrink: 0;
+  }
+  .dock-action-btn {
+    padding: 4px 6px;
+    font-size: 0.6rem;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .cyber-video-quick-badge {
+    top: 56px;
+    right: 8px;
+    transform: scale(0.8);
+    transform-origin: top right;
+  }
+}
+
+@media (max-width: 520px) {
+  .cyber-video-quick-badge {
+    display: none !important;
+  }
+}
